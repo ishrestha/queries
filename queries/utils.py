@@ -4,7 +4,6 @@ Utility functions for access to OS level info and URI parsing
 """
 import collections
 import os
-import pwd
 try:
     from urllib import parse as _urlparse
 except ImportError:
@@ -47,7 +46,12 @@ def get_current_user():
     :rtype: str
 
     """
-    return pwd.getpwuid(os.getuid())[0]
+    try:
+        import pwd
+        return pwd.getpwuid(os.getuid())[0]
+    except ImportError:
+        return getpass.getuser()
+
 
 
 def parse_qs(query_string):
